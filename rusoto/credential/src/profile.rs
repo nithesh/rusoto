@@ -177,6 +177,11 @@ fn parse_credentials_file(file_path: &Path) -> Result<HashMap<String, AwsCredent
         {
             // Not Supported here, but valid according to: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files
             continue;
+        } else if lower_case_line.contains("aws_security_token") ||
+            lower_case_line.contains("token_expiration")
+        {
+            // aws_session_token officially supercedes aws_security_token but ignoring for legacy reasons
+            continue;
         } else {
             return Err(CredentialsError::new(format!("Invalid AWS Config line: [ {} ]", lower_case_line)))
         }
